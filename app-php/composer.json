@@ -1,10 +1,19 @@
 {
   "minimum-stability": "beta",
+  "prefer-stable": true,
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/shanginn/sdk-php.git"
+    }
+  ],
   "require": {
-    "temporal/sdk": ">=1.0",
-    "spiral/tokenizer": ">=2.7",
-    "grpc/grpc": "^v1.27.0",
-    "google/protobuf": "^v3.3.0"
+    "ext-temporal": "*",
+    "ext-true_async": "*",
+    "google/protobuf": "^4.33.6 || ^5.34.0",
+    "php": ">=8.6",
+    "spiral/tokenizer": "^3.17",
+    "temporal/sdk": "dev-true-async as 2.17.x-dev"
   },
   "autoload": {
     "psr-4": {

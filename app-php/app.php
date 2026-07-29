@@ -9,6 +9,7 @@
 
 declare(strict_types=1);
 
+use Temporal\Client\ClientOptions;
 use Temporal\SampleUtils\DeclarationLocator;
 use Temporal\Client\GRPC\ServiceClient;
 use Temporal\Client\WorkflowClient;
@@ -20,12 +21,15 @@ require __DIR__ . '/vendor/autoload.php';
 // finds all available workflows, activity types and commands in a given directory
 $declarations = DeclarationLocator::create(__DIR__ . '/src/');
 
-$host = getenv('TEMPORAL_CLI_ADDRESS');
-if (empty($host)) {
-    $host = 'localhost:7233';
-}
+$host = getenv('TEMPORAL_ADDRESS')
+    ?: getenv('TEMPORAL_CLI_ADDRESS')
+    ?: 'localhost:7233';
+$namespace = getenv('TEMPORAL_NAMESPACE') ?: ClientOptions::DEFAULT_NAMESPACE;
 
-$workflowClient = WorkflowClient::create(ServiceClient::create($host));
+$workflowClient = WorkflowClient::create(
+    ServiceClient::create($host),
+    (new ClientOptions())->withNamespace($namespace),
+);
 
 $app = new Application('Temporal PHP-SDK Samples');
 

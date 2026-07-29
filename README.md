@@ -1,4 +1,4 @@
-## Temporal Simple Polyglot example
+## Temporal Simple Polyglot example with PHP TrueAsync
 
 
 <p align="center">
@@ -11,6 +11,23 @@ This demo uses the following Temporal SDKs:
 * [Go](https://docs.temporal.io/docs/go/introduction)
 * [PHP](https://docs.temporal.io/docs/php/introduction)
 * [Node](https://docs.temporal.io/docs/node/introduction)
+
+The PHP worker uses the
+[TrueAsync Temporal SDK fork](https://github.com/shanginn/sdk-php/tree/true-async)
+and runs directly inside PHP. It does not require RoadRunner or the PHP gRPC
+extension.
+
+### Replay compatibility and cutover
+
+The TrueAsync SDK persists the integer selected by `Workflow::getVersion()` in
+an encoded Temporal Core patch ID. Replay-safe `Workflow::sideEffect()` and the
+`Workflow::uuid()`, `Workflow::uuid4()`, and `Workflow::uuid7()` helpers run
+through SDK-private Local Activities whose results Core records in history.
+
+RoadRunner histories containing legacy `Version` or `SideEffect` markers are
+not compatible with these native Core records. Complete or drain those active
+executions before switching their task queue to the TrueAsync PHP worker, or
+use a separately validated history-migration procedure.
 
 It shows how Temporal can act as a service orchestrator and mediator between 
 different distributed applications written in different programming languages.
@@ -51,15 +68,31 @@ npm start
 
 "npm install" does not have to be run each time, only when changes are made.
 
-3) Start the PHP sample:
+3) Start the PHP sample.
+
+Make sure `php` resolves to a PHP 8.6 TrueAsync build with both the `true_async` and
+native `temporal` extensions loaded:
+
+```shell script
+php -r 'foreach (["true_async", "temporal"] as $extension) { printf("%s: %s\n", $extension, extension_loaded($extension) ? "loaded" : "missing"); }'
+```
+
+Install the PHP dependencies and start the worker:
+
 ```shell script
 cd app-php
 composer install
-./rr serve
-php app.php simple  
+TEMPORAL_ADDRESS=localhost:7233 php worker.php
 ```
 
-"composer install" does not have to be run each time.
+Keep the worker running. In another terminal, start the PHP Workflow:
+
+```shell script
+cd app-php
+php app.php simple
+```
+
+`composer install` does not have to be run each time.
 
 4) Start the Go worker and starter:
 ```shell script
