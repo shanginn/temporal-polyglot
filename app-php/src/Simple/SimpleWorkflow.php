@@ -25,13 +25,13 @@ class SimpleWorkflow implements SimpleWorkflowInterface
     {
         
         // Wait for Java signals
-        yield Workflow::await(fn() => $this->countJava == 10);
+        Workflow::await(fn() => $this->countJava == 10);
         foreach ($this->inputJava as $value) {
            $this->results .= $value . "\n";
        }
 
         // Wait for Go signals
-        yield Workflow::await(fn() => $this->countGo == 10);
+        Workflow::await(fn() => $this->countGo == 10);
         foreach ($this->inputGo as $value) {
            $this->results .= $value . "\n";
         }
@@ -46,7 +46,7 @@ class SimpleWorkflow implements SimpleWorkflowInterface
                 RetryOptions::new()->withMaximumAttempts(1)
             );
 
-            yield Workflow::executeActivity('["@activities/nodeactivity", "nodeActivity"]', ["From PHP Workflow"], $options);
+            Workflow::executeActivity('["@activities/nodeactivity", "nodeActivity"]', ["From PHP Workflow"], $options);
         } catch(Failure\ActivityFailure $e) {
             $cause = $e->getPrevious();
             $this->results .= "Error from Node Activity: " . $cause->getOriginalMessage() . "\n";

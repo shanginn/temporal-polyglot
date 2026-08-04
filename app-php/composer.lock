@@ -2940,12 +2940,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/shanginn/sdk-php.git",
-                "reference": "a3430639aa7d14628532901870ebb7c266cdbe25"
+                "reference": "ba9c1ebcd1713f3a0caef898025ef55cfa22c134"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shanginn/sdk-php/zipball/a3430639aa7d14628532901870ebb7c266cdbe25",
-                "reference": "a3430639aa7d14628532901870ebb7c266cdbe25",
+                "url": "https://api.github.com/repos/shanginn/sdk-php/zipball/ba9c1ebcd1713f3a0caef898025ef55cfa22c134",
+                "reference": "ba9c1ebcd1713f3a0caef898025ef55cfa22c134",
                 "shasum": ""
             },
             "require": {
@@ -3061,6 +3061,15 @@
                 "test:accept-fast": [
                     "tests/runner.php vendor/bin/phpunit --testsuite=\"Acceptance-Fast\" --color=always --testdox"
                 ],
+                "test:nexus": [
+                    "@php vendor/bin/phpunit --testsuite=Unit --filter=Nexus --colors=always --testdox"
+                ],
+                "test:nexus:e2e": [
+                    "@php tests/truasync/nexus_worker_factory.php"
+                ],
+                "test:standalone-activity:e2e": [
+                    "@php tests/truasync/standalone_activity.php"
+                ],
                 "transcripts:last": [
                     "php tests/Acceptance/transcript-merge.php"
                 ],
@@ -3095,7 +3104,7 @@
                 "issues": "https://github.com/shanginn/sdk-php/issues",
                 "source": "https://github.com/shanginn/sdk-php"
             },
-            "time": "2026-07-29T21:16:35+00:00"
+            "time": "2026-08-04T20:49:12+00:00"
         }
     ],
     "packages-dev": [],

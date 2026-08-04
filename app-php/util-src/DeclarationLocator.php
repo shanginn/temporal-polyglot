@@ -18,57 +18,69 @@ class DeclarationLocator
     private ClassesInterface $classLocator;
 
     /**
-     * @return  \Generator
+     * @return list<class-string>
      */
-    public function getCommands(): \Generator
+    public function getCommands(): array
     {
+        $commands = [];
         foreach ($this->classLocator->getClasses(Command::class) as $class) {
             if (!$class->isAbstract()) {
-                yield $class->getName();
+                $commands[] = $class->getName();
             }
         }
+
+        return $commands;
     }
 
     /**
      * Finds all activity declarations using Activity suffix.
      *
-     * @return  \Generator
+     * @return list<class-string>
      */
-    public function getActivityTypes(): \Generator
+    public function getActivityTypes(): array
     {
+        $activities = [];
         foreach ($this->getAvailableDeclarations() as $class) {
             if ($this->endsWith($class->getName(), 'Activity')) {
-                yield $class->getName();
+                $activities[] = $class->getName();
             }
         }
+
+        return $activities;
     }
 
     /**
      * Finds all workflow declarations using Workflow suffix.
      *
-     * @return  \Generator
+     * @return list<class-string>
      */
-    public function getWorkflowTypes(): \Generator
+    public function getWorkflowTypes(): array
     {
+        $workflows = [];
         foreach ($this->getAvailableDeclarations() as $class) {
             if ($this->endsWith($class->getName(), 'Workflow')) {
-                yield $class->getName();
+                $workflows[] = $class->getName();
             }
         }
+
+        return $workflows;
     }
 
     /**
-     * @return \Generator|\ReflectionClass[]
+     * @return list<\ReflectionClass<object>>
      */
-    private function getAvailableDeclarations(): \Generator
+    private function getAvailableDeclarations(): array
     {
+        $declarations = [];
         foreach ($this->classLocator->getClasses() as $class) {
             if ($class->isAbstract() || $class->isInterface()) {
                 continue;
             }
 
-            yield $class;
+            $declarations[] = $class;
         }
+
+        return $declarations;
     }
 
     /**
